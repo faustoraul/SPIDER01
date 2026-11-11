@@ -46,7 +46,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    image: spider-frontend-dev
+      target: development
+    image: spider-frontend:0.9.0
     container_name: spider_frontend
     ports:
       - "${FRONTEND_PORT:-5173}:5173"
