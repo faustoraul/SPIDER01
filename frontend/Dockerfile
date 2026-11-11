@@ -4,7 +4,6 @@ WORKDIR /app
 
 COPY package*.json ./
 
-
 FROM base AS development
 
 RUN npm ci
@@ -16,13 +15,10 @@ EXPOSE 5173
 
 CMD ["npm", "run", "dev"]
 
-
 FROM base AS builder
 RUN npm ci
 COPY . .
 RUN npm run build
-
-
 
 
 FROM nginx:alpine AS production
