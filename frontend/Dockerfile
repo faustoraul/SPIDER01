@@ -25,7 +25,7 @@ RUN npm run build
 
 
 
-FROM nginx:stable-alpine AS production
+FROM nginx:alpine AS production
 RUN apk upgrade --no-cache
 
 COPY --from=builder /app/dist /usr/share/nginx/html
