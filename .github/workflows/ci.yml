@@ -1,0 +1,62 @@
+name: SPIDER CI
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  # =====================================================================
+  # TRABAJO 1: Pruebas del Backend (Python/Flask)
+  # =====================================================================
+  backend-tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout del código
+      uses: actions/checkout@v4
+
+    - name: Configurar Python 3.12
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: 'pip' # Acelera las futuras ejecuciones
+
+    - name: Instalar dependencias
+      run: |
+        cd backend
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Ejecutar pruebas con pytest
+      run: |
+        cd backend
+        pytest -v
+
+  # =====================================================================
+  # TRABAJO 2: Compilación del Frontend (React/Vite)
+  # =====================================================================
+  frontend-build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout del código
+      uses: actions/checkout@v4
+
+    - name: Configurar Node.js 20
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+
+    - name: Instalar dependencias
+      run: |
+        cd frontend
+        npm ci
+
+    - name: Verificar que el frontend compila sin errores
+      run: |
+        cd frontend
+        npm run build
