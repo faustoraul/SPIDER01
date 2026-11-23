@@ -5,6 +5,7 @@ import LeadsPage from './pages/LeadsPage';
 import PipelinePage from './pages/PipelinePage';
 import SocialPage from './pages/SocialPage';
 import InventoryPage from './pages/InventoryPage';
+import PurchasesPage from './pages/PurchasesPage';
 import { api } from './services/api';
 
 export default function App() {
@@ -31,7 +32,7 @@ export default function App() {
   return (
     <div style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif', maxWidth: 1400, margin: '0 auto' }}>
       <h1 style={{ marginBottom: '0.25rem' }}>SPIDER</h1>
-      <p style={{ color: '#666', marginTop: 0 }}>Fase 8 — Productos e Inventario</p>
+      <p style={{ color: '#666', marginTop: 0 }}>Fase 9 — Compras y Proveedores</p>
 
       <div style={{ background: '#f0f0f0', padding: '0.75rem 1rem', borderRadius: 6, marginBottom: '1.5rem' }}>
         <div>Backend: <strong>{backendStatus}</strong></div>
@@ -45,6 +46,7 @@ export default function App() {
         <button onClick={() => setTab('pipeline')} style={tabStyle(tab === 'pipeline')}>Pipeline</button>
         <button onClick={() => setTab('social')} style={tabStyle(tab === 'social')}>Redes Sociales</button>
         <button onClick={() => setTab('inventory')} style={tabStyle(tab === 'inventory')}>Inventario</button>
+        <button onClick={() => setTab('purchases')} style={tabStyle(tab === 'purchases')}>Compras</button>
       </div>
 
       {tab === 'companies' && <CompaniesPage />}
@@ -53,6 +55,7 @@ export default function App() {
       {tab === 'pipeline' && <PipelinePage />}
       {tab === 'social' && <SocialPage />}
       {tab === 'inventory' && <InventoryPage />}
+      {tab === 'purchases' && <PurchasesPage />}
     </div>
   );
 }

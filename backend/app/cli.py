@@ -226,3 +226,50 @@ def register_cli(app):
 
         db.session.commit()
         click.echo('Catálogo e inventario de prueba creados.')
+
+    @app.cli.command('seed-purchases')
+    def seed_purchases():
+        """Crea un proveedor y una orden de compra en borrador."""
+        from .extensions import db
+        from .modules.companies.models import Company
+        from .modules.branches.models import Branch
+        from .modules.inventory.models import Product
+        from .modules.purchases.models import Supplier, PurchaseOrder, PurchaseOrderItem
+        from datetime import date
+
+        acme = Company.query.filter_by(name='Acme SRL').first()
+        if not acme:
+            click.echo('Error: primero ejecuta "flask seed".')
+            return
+
+        if Supplier.query.count() > 0:
+            click.echo('Ya existen proveedores. Abortando.')
+            return
+
+        supplier = Supplier(company_id=acme.id, name='Distribuidora Global SRL', tax_id='101-99999-9', email='ventas@global.test')
+        db.session.add(supplier)
+        db.session.flush()
+
+        branch = Branch.query.filter_by(company_id=acme.id).first()
+        laptops = Product.query.filter_by(company_id=acme.id, sku='ELEC-001').first()
+        zapatillas = Product.query.filter_by(company_id=acme.id, sku='ROPA-001').first()
+
+        if not branch or not laptops or not zapatillas:
+            click.echo('Error: faltan datos de inventario. Ejecuta "flask seed-inventory".')
+            return
+
+        order = PurchaseOrder(
+            company_id=acme.id, supplier_id=supplier.id, branch_id=branch.id,
+            order_number='PO-2026-001', status='ordered',
+            order_date=date.today(), total=0
+        )
+        db.session.add(order)
+        db.session.flush()
+
+        item1 = PurchaseOrderItem(order_id=order.id, product_id=laptops.id, quantity=5, unit_cost=750.00)
+        item2 = PurchaseOrderItem(order_id=order.id, product_id=zapatillas.id, quantity=20, unit_cost=45.00)
+        db.session.add_all([item1, item2])
+
+        order.total = (5 * 750) + (20 * 45)
+        db.session.commit()
+        click.echo('Proveedores y orden de compra de prueba creados.')
