@@ -34,7 +34,8 @@ jobs:
         cd backend
         pytest -v
 
-    docker-build:
+        
+docker-build:
     runs-on: ubuntu-latest
 
     steps:
