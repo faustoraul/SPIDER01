@@ -273,3 +273,31 @@ def register_cli(app):
         order.total = (5 * 750) + (20 * 45)
         db.session.commit()
         click.echo('Proveedores y orden de compra de prueba creados.')
+
+    @app.cli.command('seed-pos')
+    def seed_pos():
+        """Crea una caja registradora y la abre."""
+        from .extensions import db
+        from .modules.companies.models import Company
+        from .modules.branches.models import Branch
+        from .modules.sales.models import CashRegister
+
+        acme = Company.query.filter_by(name='Acme SRL').first()
+        if not acme:
+            click.echo('Error: primero ejecuta "flask seed".')
+            return
+
+        branch = Branch.query.filter_by(company_id=acme.id).first()
+        if not branch:
+            click.echo('Error: no hay sucursales.')
+            return
+
+        if CashRegister.query.count() > 0:
+            click.echo('Ya existen cajas. Abortando.')
+            return
+
+        reg = CashRegister(company_id=acme.id, branch_id=branch.id, name='Caja Principal')
+        db.session.add(reg)
+        db.session.commit()
+
+        click.echo('Caja registradora creada. Ábrela desde la API o el frontend.')

@@ -31,6 +31,7 @@ def create_app(config_object=Config):
     from .modules.social_media import models as _social_models  # noqa: F401
     from .modules.inventory import models as _inventory_models  # noqa: F401
     from .modules.purchases import models as _purchases_models  # noqa: F401
+    from .modules.sales import models as _sales_models  # noqa: F401
 
     # Blueprints
     from .modules.companies.routes import companies_bp
@@ -41,6 +42,7 @@ def create_app(config_object=Config):
     from .modules.social_media.routes import social_bp
     from .modules.inventory.routes import inventory_bp
     from .modules.purchases.routes import purchases_bp
+    from .modules.sales.routes import sales_bp
 
     app.register_blueprint(companies_bp)
     app.register_blueprint(branches_bp)
@@ -51,6 +53,7 @@ def create_app(config_object=Config):
     app.register_blueprint(social_bp)
     app.register_blueprint(inventory_bp)
     app.register_blueprint(purchases_bp)
+    app.register_blueprint(sales_bp)
 
     register_error_handlers(app)
     register_cli(app)
@@ -67,7 +70,7 @@ def create_app(config_object=Config):
         return jsonify({
             'status': 'ok',
             'service': 'spider-backend',
-            'version': '0.9.0',
+            'version': '0.10.0',
             'database': database_status,
         })
 
