@@ -6,6 +6,7 @@ import PipelinePage from './pages/PipelinePage';
 import SocialPage from './pages/SocialPage';
 import InventoryPage from './pages/InventoryPage';
 import PurchasesPage from './pages/PurchasesPage';
+import PosPage from './pages/PosPage'; // <-- NUEVO
 import { api } from './services/api';
 
 export default function App() {
@@ -15,31 +16,25 @@ export default function App() {
 
   useEffect(() => {
     let cancelled = false;
-    api.get('/health')
-      .then((health) => {
-        if (cancelled) return;
-        setBackendStatus(health.status === 'ok' ? 'conectado' : 'respuesta inesperada');
-        setDbStatus(health.database || 'desconocido');
-      })
-      .catch(() => {
-        if (!cancelled) setBackendStatus('sin conexión');
-      });
-    return () => {
-      cancelled = true;
-    };
+    api.get('/health').then((health) => {
+      if (cancelled) return;
+      setBackendStatus(health.status === 'ok' ? 'conectado' : 'respuesta inesperada');
+      setDbStatus(health.database || 'desconocido');
+    }).catch(() => { if (!cancelled) setBackendStatus('sin conexión'); });
+    return () => { cancelled = true; };
   }, []);
 
   return (
     <div style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif', maxWidth: 1400, margin: '0 auto' }}>
       <h1 style={{ marginBottom: '0.25rem' }}>SPIDER</h1>
-      <p style={{ color: '#666', marginTop: 0 }}>Fase 9 — Compras y Proveedores</p>
+      <p style={{ color: '#666', marginTop: 0 }}>Fase 10 — Ventas y Punto de Venta (POS)</p>
 
       <div style={{ background: '#f0f0f0', padding: '0.75rem 1rem', borderRadius: 6, marginBottom: '1.5rem' }}>
         <div>Backend: <strong>{backendStatus}</strong></div>
         <div>Base de datos: <strong>{dbStatus}</strong></div>
       </div>
 
-      <div style={{ marginBottom: '1.25rem', borderBottom: '1px solid #ddd' }}>
+      <div style={{ marginBottom: '1.25rem', borderBottom: '1px solid #ddd', flexWrap: 'wrap', display: 'flex' }}>
         <button onClick={() => setTab('companies')} style={tabStyle(tab === 'companies')}>Empresas</button>
         <button onClick={() => setTab('customers')} style={tabStyle(tab === 'customers')}>Clientes</button>
         <button onClick={() => setTab('leads')} style={tabStyle(tab === 'leads')}>Leads</button>
@@ -47,6 +42,7 @@ export default function App() {
         <button onClick={() => setTab('social')} style={tabStyle(tab === 'social')}>Redes Sociales</button>
         <button onClick={() => setTab('inventory')} style={tabStyle(tab === 'inventory')}>Inventario</button>
         <button onClick={() => setTab('purchases')} style={tabStyle(tab === 'purchases')}>Compras</button>
+        <button onClick={() => setTab('pos')} style={{ ...tabStyle(tab === 'pos'), background: tab === 'pos' ? '#198754' : '#e6f4ea', color: tab === 'pos' ? 'white' : '#198754', fontWeight: 'bold' }}>🛒 Punto de Venta</button>
       </div>
 
       {tab === 'companies' && <CompaniesPage />}
@@ -56,6 +52,7 @@ export default function App() {
       {tab === 'social' && <SocialPage />}
       {tab === 'inventory' && <InventoryPage />}
       {tab === 'purchases' && <PurchasesPage />}
+      {tab === 'pos' && <PosPage />}
     </div>
   );
 }
