@@ -311,7 +311,7 @@ function Field({ label, children, full }) {
   );
 }
 
-const th = { padding: 8, border: '1px solid #ccc', textAlign: 'left' };
+const th = { padding: 8, border: '1px solid #726c6c', textAlign: 'left' };
 const td = { padding: 8, border: '1px solid #ccc' };
 const input = { padding: '6px 8px', border: '1px solid #ccc', borderRadius: 4, font: 'inherit' };
 const btn = { background: 'none', border: '1px solid #999', padding: '4px 8px', marginRight: 4, cursor: 'pointer', borderRadius: 3 };
